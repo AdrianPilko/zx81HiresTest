@@ -24,6 +24,8 @@
 ;the standard REM statement that will contain our 'hex' code
 #include "line1.asm"
 
+displayVar 
+    DEFB  0
 
 ;------------------------------------------------------------
 ; code starts, gets added to the end of the rem
@@ -42,6 +44,22 @@ mainlp
 	ld b,VSYNCLP
 pauselp	
 	call vsync
+    
+    ;; bit added by Adrian Pilkington
+    ;; this is where our code to run the game can go
+    ld a, (displayVar)
+    inc a
+    ld (displayVar), a
+    ld h, (displayVar)
+    ld l, 0
+    push hl
+    pop de   
+    ld hl,HDISPLAY+1
+    add hl, de    
+    ld a, $11
+    ld (hl), a
+    
+    ;;; end of our game code
 	djnz pauselp
 	
 	call waitkpress
